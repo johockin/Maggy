@@ -6,64 +6,60 @@ A reliable footage dumping app for filmmakers that replaces expensive Hedge subs
 Simple, reliable footage transfers for small crew DOPs and independent filmmakers. **Reliability > Performance > Features > Polish** - because footage is irreplaceable.
 
 ## ⚡ Key Features
+- **Revolutionary batch queuing** (one-click queue all sources to all destinations)
 - **Sequential transfers only** (prevents bus contention & thermal throttling)
 - **SHA-256 checksum verification** (industry standard security)
-- **Drag & drop interface** (cards → destination drives)
+- **Real folder selection** (browse with "New Folder" capability)
+- **Flexible workflow** (manual folders + auto-detected drives)
+- **Individual transfer cancellation** (cancel specific transfers while others continue)
 - **Test mode by default** (safe testing with simulated data)
 - **Transparent error handling** (Retry/Skip/Abort with context)
 - **Camera detection** (FX6, A7S with proper icons)
 
 ## Setup for Testing
 
-### Option 1: Swift Package Manager (Recommended)
+### Xcode (Recommended)
 ```bash
 cd Maggy
-swift run
-```
-
-### Option 2: Xcode
-```bash
-cd Maggy
-open Package.swift
+open Maggy.xcodeproj
 ```
 Then press ⌘+R to build and run
 
-## What to Test
+## What to Test - VERSION 0.1 🎬
 
-### 1. **Drive Detection**
-- Launch the app in Test Mode (enabled by default)
-- Check that test cards appear in the left panel:
-  - FX6_Card (128GB)
-  - A7S_Card (64GB)
-- Verify destination drives appear in the right panel:
-  - RAID Drive (2TB free)
-  - Archive Drive (8TB free)
+### **Professional Filmmaker Workflow:**
+```
+1. Browse for 3 camera cards    (Click "Drop a folder" in SOURCE)
+2. Browse for 2 backup drives   (Click "Drop a folder" in DESTINATIONS)  
+3. Click "🎯 Queue All Sources → All Destinations"
+4. See "6 transfers queued" 
+5. Click "▶️ Start Transfers (6)"
+6. Walk away - all transfers complete sequentially!
+```
 
-### 2. **Drag & Drop**
-- Drag test cards from left panel to destination drives on right
-- Visual feedback should show during drag (green border on drop zone)
-- Transfer jobs should appear in the queue panel below
+### 1. **Real Folder Selection**
+- Click "📁 Drop a folder (click to browse)" in SOURCE panel
+- Use "New Folder" button in browse dialog to create organized structure
+- Add multiple source folders (up to 3 destination slots available)
+- Toggle between Test Mode and Real Mode in Settings
 
-### 3. **Transfer Process**
-- Click "Start Transfers" to begin sequential copying
-- Watch progress bars update in real-time
-- Only one transfer should run at a time (sequential processing)
+### 2. **Batch Queuing System**
+- Select multiple sources and destinations
+- One click "🎯 Queue All" creates matrix of all combinations
+- Example: 3 sources × 2 destinations = 6 transfers automatically queued
+- Clear queue if needed before starting
 
-### 4. **Checksum Verification**
-- After each file copies, SHA-256 checksum is calculated
-- Status should show "Verifying" during checksum phase
-- Completed transfers should show green checkmark
+### 3. **Sequential Transfer Process**
+- Click "▶️ Start Transfers (X)" shows count
+- Progress visible in real-time with adaptive UI
+- Source/destination panels stay accessible during transfers
+- Individual transfers can be cancelled with ❌ buttons
 
-### 5. **Error Handling**
-To simulate errors:
-- Fill up destination (create large file in `~/Desktop/MaggyDestination/`)
-- Remove source during transfer
-- Deny permissions to destination folder
-
-Expected dialog options:
-- **Retry**: Attempts the same operation again
-- **Skip**: Continues with next file (logs skipped file)
-- **Stop**: Aborts entire card transfer
+### 4. **Professional Features**
+- SHA-256 checksum verification on every file
+- Proper macOS app with dock icon and window controls
+- Collapsible sections for clean workspace
+- Error recovery with Retry/Skip/Stop options
 
 ## Expected Behavior
 

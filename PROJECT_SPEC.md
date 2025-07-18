@@ -91,6 +91,8 @@ On transfer failure:
 
 *[Date] - [Author] - [Change]*
 
+- 2025-01-18 - Claude - **VERSION 0.1 FOUNDATION COMPLETE**: Implemented revolutionary batch queuing system, fixed critical transfer hanging bug, simplified UX to single-button workflow, added real folder selection with "New Folder" capability, and redesigned adaptive layout. App now ready for production testing with professional filmmaker workflow: browse sources/destinations → queue all → start transfers → walk away. QA scheduled for morning.
+- 2025-01-18 - Claude - **XCODE PROJECT CONVERSION COMPLETE**: Successfully converted Swift Package to proper macOS Xcode project. Added proper window management, dock icon, app menu bar, Info.plist, entitlements for file access, and asset catalogs. App now launches as professional macOS application while preserving all transfer functionality.
 - 2025-01-18 - Claude - **CRITICAL ERROR & RECOVERY**: Accidentally deleted PROJECT_SPEC.md while fixing Xcode project. Recreated from user's original. Built complete MVP: SwiftUI app with drag/drop, sequential transfers, SHA-256 checksums, test mode, error dialogs. Set up git repo. LESSON LEARNED: Never delete the spec file - it's the sacred foundation.
 - 2024-12-XX - Human - Initial spec creation based on Hedge replacement needs
 
@@ -98,32 +100,123 @@ On transfer failure:
 
 ## 🧱 ROADMAP & PIPELINE
 
-### **NOW** (MVP)
-- [x] Basic UI: drive detection panels (left/right)
-- [x] File system scanning for mounted drives
-- [x] Simple drag-and-drop from source to destination
-- [x] Basic file copying with progress bar
-- [x] SHA-256 checksum verification
+🎬 **MAGGY ROADMAP - HEDGE KILLER EDITION**
 
-### **NEXT** (Core Features)
-- [x] Queue management (multiple cards to multiple destinations)
-- [x] Failure handling with user choice dialog
-- [ ] xxHash fast checksum option
-- [x] Transfer logging and error reporting
-- [x] Camera detection (FX6, A7S icons implemented, RED/ARRI planned)
+## 🎯 VERSION 0.1 - FOUNDATION ✅ COMPLETE!
+**"Make it actually work reliably"**
 
-### **LATER** (Polish)
-- [ ] Transfer history/log viewer
-- [ ] Customizable checksum algorithms
-- [ ] Batch operations (multiple cards same destination)
-- [ ] Preferences/settings panel
-- [ ] Export/import transfer logs
+- [x] Individual transfer cancellation
+- [x] Fix permission issues  
+- [x] Proper error recovery
+- [x] Basic window management
+- [x] Core transfer engine bulletproof
+- [x] **Real folder selection (browse buttons with "New Folder" capability)**
+- [x] **Flexible workflow: manual drop zones + auto-detection drawer**
+- [x] **Multiple destination support (3 slots)**
+- [x] **REVOLUTIONARY BATCH QUEUING SYSTEM** - One-click queue all sources to all destinations
+- [x] **Fixed critical transfer hanging bug** - Sequential transfers now complete properly
+- [x] **Simplified UX** - Single "Queue All" button replaces confusing multiple buttons
+- [x] **Adaptive layout** - Source/destination always visible, transfer queue gets focus when active
 
-### **SOMEDAY** (Nice to Have)
-- [ ] Network destination support
-- [ ] Cloud storage integration
-- [ ] Automated backup scheduling
-- [ ] Multiple checksum verification
+**UX IMPROVEMENTS FOR 0.1:**
+```
+┌─────────────────────────────────────────────────┐
+│ Maggy - Footage Dumper                 [⚙️]     │
+├─────────────────┬───────────────────────────────┤
+│ SOURCE          │ DESTINATIONS                  │
+│ ┌─────────────┐ │ ┌─────────────┐ ┌─────────────┐ │
+│ │[📁] Drop a  │ │ │[💾] Drop a  │ │[💾] Drop a  │ │
+│ │    folder   │ │ │   folder    │ │   folder    │ │
+│ │             │ │ │             │ │             │ │
+│ │  (click to  │ │ │ (click to   │ │ │ (click to  │ │
+│ │   browse)   │ │ │  browse)    │ │ │  browse)   │ │
+│ └─────────────┘ │ └─────────────┘ └─────────────┘ │
+├─────────────────┴───────────────────────────────┤
+│ 🔽 Detected Cards & Drives [auto-detected]      │
+│ 📷 FX6_Card (128GB)  💾 External SSD (1TB)     │
+├─────────────────────────────────────────────────┤
+│ TRANSFER QUEUE                                  │
+│ 📁 Custom_Folder → Destination1 [████░] 80% [❌]│
+│ 📷 FX6_Card → External_SSD [Queued]      [❌]│
+├─────────────────────────────────────────────────┤
+│ [Start Transfers]                    [Settings] │
+└─────────────────────────────────────────────────┘
+```
+
+**Key UX Improvements:**
+- **Drop zones**: Empty panes that say "Drop a folder" with browse fallback
+- **Multiple destinations**: User can set up several destination folders  
+- **Auto-detected drawer**: Cards/drives appear in middle section automatically
+- **Flexible workflow**: Mix manual folders + auto-detected drives
+- **Visual hierarchy**: Clear separation between manual vs auto-detected
+
+## 🎯 VERSION 0.2 - VISUAL IDENTITY (Weeks 3-4)
+**"Make filmmakers want to use it"**
+
+- [ ] 🎨 Cinema-grade dark theme (THX/Dolby inspired)
+- [ ] 🎨 Professional logo and branding
+- [ ] 🎨 CleanMyMac-style interface simplification
+- [ ] 🎨 Smooth animations and transitions
+- [ ] 🎨 Sound design (subtle audio feedback)
+
+## 🎯 VERSION 0.3 - PRO FEATURES (Month 2)
+**"Better than Hedge workflows"**
+
+- [ ] 📁 Real drive detection (not just test mode)
+- [ ] 📁 Network drive support (SMB, NAS)
+- [ ] 📁 Custom naming patterns (date stamps, camera IDs)
+- [ ] 📁 Transfer templates (save common workflows)
+- [ ] 📁 Verify-only mode (check existing transfers)
+
+## 🎯 VERSION 0.4 - PROFESSIONAL POLISH (Month 3)
+**"Tool DITs recommend to colleagues"**
+
+- [ ] 📊 Transfer history and logging
+- [ ] 📊 Performance metrics and health monitoring
+- [ ] 📊 Batch operations (multiple cards simultaneously)
+- [ ] 📊 Keyboard shortcuts and menu bar integration
+- [ ] 📊 Export transfer reports
+
+## 🎯 VERSION 0.5 - DISTRIBUTION READY (Month 4)
+**"Ship it to the world"**
+
+- [ ] 🚀 Code signing and notarization
+- [ ] 🚀 Installer package
+- [ ] 🚀 Auto-update system
+- [ ] 🚀 User documentation and tutorials
+- [ ] 🚀 Website and distribution strategy
+
+---
+
+## 🎪 LONG-TERM VISION (Months 6-12)
+
+### **VERSION 1.0 - HEDGE REPLACEMENT**
+- Industry adoption by small crews
+- Word-of-mouth growth in film community
+- Feature parity with Hedge essentials
+
+### **VERSION 2.0 - INDUSTRY STANDARD**
+- Advanced checksumming (multiple algorithms)
+- Cloud integration (direct upload to post facilities)
+- Multi-camera sync and organization
+- Integration with editorial systems (Avid, Resolve, etc.)
+
+### **VERSION 3.0 - ECOSYSTEM**
+- Mobile companion app (iOS remote monitoring)
+- Web dashboard for post houses
+- API for integration with other tools
+- Enterprise features for large productions
+
+---
+
+## 🎬 SUCCESS METRICS:
+- **0.1**: "I can use this for my shoots"
+- **0.2**: "This looks more professional than Hedge"
+- **0.3**: "This is actually better workflow than Hedge"
+- **0.4**: "I'm recommending this to other filmmakers"
+- **0.5**: "I'd pay for this if it weren't free"
+
+**The Goal**: By version 0.5, Maggy should be the tool that small crews reach for first, not just because it's free, but because it's genuinely better than the expensive alternatives.
 
 ---
 

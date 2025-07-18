@@ -1,0 +1,81 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "Maggy-arm64-apple-macosx15.0-debug.exe": ["<Maggy-arm64-apple-macosx15.0-debug.exe>"]
+  "Maggy-arm64-apple-macosx15.0-debug.module": ["<Maggy-arm64-apple-macosx15.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<Maggy-arm64-apple-macosx15.0-debug.exe>","<Maggy-arm64-apple-macosx15.0-debug.module>"]
+  "test": ["<Maggy-arm64-apple-macosx15.0-debug.exe>","<Maggy-arm64-apple-macosx15.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy":
+    is-mutated: true
+commands:
+  "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy-entitlement.plist":
+    tool: write-auxiliary-file
+    inputs: ["<entitlement-plist>","<com.apple.security.get-task-allow>"]
+    outputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy-entitlement.plist"]
+    description: "Write auxiliary file /Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy-entitlement.plist"
+
+  "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/johnnyhockin/AI Playground/Maggy/Sources/ContentView.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/MaggyApp.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/DriveInfo.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/TransferEngine.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/TransferJob.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/ChecksumManager.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/DriveDetector.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/FileOperations.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/TestDataManager.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/DestinationDrivesView.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/SettingsView.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/SourceDrivesView.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/TransferQueueView.swift"]
+    outputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/sources"]
+    description: "Write auxiliary file /Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/sources"
+
+  "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ChecksumManager.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ContentView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DestinationDrivesView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveDetector.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveInfo.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/FileOperations.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/MaggyApp.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SettingsView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SourceDrivesView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TestDataManager.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferEngine.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferJob.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferQueueView.swift.o"]
+    outputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.product/Objects.LinkFileList"
+
+  "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Library/Developer/CommandLineTools/usr/bin/swiftc"]
+    outputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt"
+
+  "<Maggy-arm64-apple-macosx15.0-debug.exe>":
+    tool: phony
+    inputs: ["<Maggy-arm64-apple-macosx15.0-debug.exe-CodeSigning>"]
+    outputs: ["<Maggy-arm64-apple-macosx15.0-debug.exe>"]
+
+  "<Maggy-arm64-apple-macosx15.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ContentView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/MaggyApp.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveInfo.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferEngine.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferJob.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ChecksumManager.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveDetector.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/FileOperations.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TestDataManager.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DestinationDrivesView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SettingsView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SourceDrivesView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferQueueView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Modules/Maggy.swiftmodule"]
+    outputs: ["<Maggy-arm64-apple-macosx15.0-debug.module>"]
+
+  "C.Maggy-arm64-apple-macosx15.0-debug.exe":
+    tool: shell
+    inputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ChecksumManager.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ContentView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DestinationDrivesView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveDetector.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveInfo.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/FileOperations.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/MaggyApp.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SettingsView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SourceDrivesView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TestDataManager.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferEngine.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferJob.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferQueueView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.product/Objects.LinkFileList"]
+    outputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/Maggy"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-L","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug","-o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy","-module-name","Maggy","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-alias","-Xlinker","_Maggy_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.product/Objects.LinkFileList","-target","arm64-apple-macosx13.0","-Xlinker","-add_ast_path","-Xlinker","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Modules/Maggy.swiftmodule","-F","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g","-Xlinker","-rpath","-Xlinker","/Library/Developer/CommandLineTools/Library/Developer/Frameworks"]
+
+  "C.Maggy-arm64-apple-macosx15.0-debug.exe-entitlements":
+    tool: shell
+    inputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy-entitlement.plist"]
+    outputs: ["<Maggy-arm64-apple-macosx15.0-debug.exe-CodeSigning>"]
+    description: "Applying debug entitlements to ./.build/arm64-apple-macosx/debug/Maggy"
+    args: ["codesign","--force","--sign","-","--entitlements","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy-entitlement.plist","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy"]
+
+  "C.Maggy-arm64-apple-macosx15.0-debug.module":
+    tool: shell
+    inputs: ["/Users/johnnyhockin/AI Playground/Maggy/Sources/ContentView.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/MaggyApp.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/DriveInfo.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/TransferEngine.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/TransferJob.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/ChecksumManager.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/DriveDetector.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/FileOperations.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/TestDataManager.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/DestinationDrivesView.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/SettingsView.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/SourceDrivesView.swift","/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/TransferQueueView.swift","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/swift-version--1AB21518FC5DEDBE.txt","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/sources"]
+    outputs: ["/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ContentView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/MaggyApp.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveInfo.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferEngine.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferJob.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ChecksumManager.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveDetector.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/FileOperations.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TestDataManager.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DestinationDrivesView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SettingsView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SourceDrivesView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferQueueView.swift.o","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Modules/Maggy.swiftmodule"]
+    description: "Compiling Swift Module 'Maggy' (13 sources)"
+    args: ["/Library/Developer/CommandLineTools/usr/bin/swiftc","-module-name","Maggy","-emit-dependencies","-emit-module","-emit-module-path","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Modules/Maggy.swiftmodule","-output-file-map","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/output-file-map.json","-incremental","-c","@/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/sources","-I","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx13.0","-enable-batch-mode","-index-store-path","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j10","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","Maggy_main","-swift-version","5","-F","/Library/Developer/CommandLineTools/Library/Developer/Frameworks","-sdk","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-g","-Xcc","-isysroot","-Xcc","/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk","-Xcc","-fPIC","-Xcc","-g"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/johnnyhockin/AI Playground/Maggy/Sources/","/Users/johnnyhockin/AI Playground/Maggy/Package.swift","/Users/johnnyhockin/AI Playground/Maggy/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

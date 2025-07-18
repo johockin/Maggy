@@ -1,0 +1,83 @@
+{
+  "": {
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/master.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/ContentView.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ContentView.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ContentView.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ContentView~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ContentView.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/MaggyApp.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/MaggyApp.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/MaggyApp.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/MaggyApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/MaggyApp.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/DriveInfo.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveInfo.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveInfo.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveInfo~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveInfo.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/TransferEngine.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferEngine.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferEngine.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferEngine~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferEngine.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Models/TransferJob.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferJob.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferJob.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferJob~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferJob.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/ChecksumManager.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ChecksumManager.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ChecksumManager.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ChecksumManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/ChecksumManager.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/DriveDetector.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveDetector.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveDetector.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveDetector~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DriveDetector.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/FileOperations.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/FileOperations.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/FileOperations.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/FileOperations~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/FileOperations.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Services/TestDataManager.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TestDataManager.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TestDataManager.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TestDataManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TestDataManager.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/DestinationDrivesView.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DestinationDrivesView.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DestinationDrivesView.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DestinationDrivesView~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/DestinationDrivesView.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/SettingsView.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SettingsView.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SettingsView.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SettingsView~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SettingsView.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/SourceDrivesView.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SourceDrivesView.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SourceDrivesView.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SourceDrivesView~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/SourceDrivesView.swiftdeps"
+  },
+  "/Users/johnnyhockin/AI Playground/Maggy/Sources/Views/TransferQueueView.swift": {
+    "dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferQueueView.d",
+    "object": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferQueueView.swift.o",
+    "swiftmodule": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferQueueView~partial.swiftmodule",
+    "swift-dependencies": "/Users/johnnyhockin/AI Playground/Maggy/.build/arm64-apple-macosx/debug/Maggy.build/TransferQueueView.swiftdeps"
+  }
+}

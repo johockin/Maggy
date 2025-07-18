@@ -1,7 +1,7 @@
 import Foundation
 import CoreTransferable
 
-struct DriveInfo: Identifiable, Transferable, Codable {
+struct DriveInfo: Identifiable, Transferable {
     let id = UUID()
     let name: String
     let path: URL
@@ -27,11 +27,11 @@ struct DriveInfo: Identifiable, Transferable, Codable {
     }
     
     static var transferRepresentation: some TransferRepresentation {
-        CodableRepresentation(contentType: .json)
+        ProxyRepresentation(exporting: \.id.uuidString)
     }
 }
 
-enum CameraType: Codable {
+enum CameraType {
     case fx6
     case a7s
     case redCamera

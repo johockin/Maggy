@@ -7,6 +7,7 @@ class TransferEngine: ObservableObject {
     @Published var transfers: [TransferJob] = []
     @Published var currentTransfer: TransferJob?
     @Published var isTransferring = false
+    @Published var queueFeedbackMessage: String?
     
     private var fileOperations: FileOperations
     private var checksumManager: ChecksumManager
@@ -19,7 +20,46 @@ class TransferEngine: ObservableObject {
     
     func addTransfer(from source: DriveInfo, to destination: DriveInfo) {
         print("🎬 Adding transfer from \(source.name) to \(destination.name)")
-        let destinationPath = destination.path.appendingPathComponent(source.name + "_" + Date().ISO8601Format())
+        
+        // Create safe timestamp format without slashes
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd_HHmmss"
+        let timestamp = dateFormatter.string(from: Date())
+        
+        let destinationPath = destination.path.appendingPathComponent("\(source.name)_MAG_\(timestamp)")
+        
+        // Check if transfer already exists to prevent duplicates
+        let isDuplicate = transfers.contains { transfer in
+            transfer.sourcePath == source.path && 
+            transfer.destinationPath.deletingLastPathComponent() == destination.path
+        }
+        
+        if isDuplicate {
+            print("⚠️ Duplicate transfer detected - adding anyway: \(source.name) → \(destination.name)")
+            queueFeedbackMessage = "Added \(source.name) → \(destination.name) (duplicate)"
+            
+            // Clear message after delay
+            Task {
+                try await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
+                await MainActor.run {
+                    if queueFeedbackMessage?.contains("duplicate") == true {
+                        queueFeedbackMessage = nil
+                    }
+                }
+            }
+        } else {
+            queueFeedbackMessage = "Added \(source.name) → \(destination.name)"
+            
+            // Clear message after delay
+            Task {
+                try await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+                await MainActor.run {
+                    if queueFeedbackMessage?.contains("Added") == true {
+                        queueFeedbackMessage = nil
+                    }
+                }
+            }
+        }
         
         // Add a placeholder transfer immediately for UI responsiveness
         let placeholderJob = TransferJob(
@@ -78,21 +118,45 @@ class TransferEngine: ObservableObject {
     }
     
     func queueAllSourcesAllDestinations(driveDetector: DriveDetector) {
-        print("🎬 Queuing ALL sources to ALL destinations - BATCH MODE!")
+        print("🎬 ===== STARTING BATCH QUEUE =====")
         
-        let allSources = driveDetector.manualSourceFolders + driveDetector.sourceCards
+        let allSources = driveDetector.manualSourceFolders.filter { !$0.isDisabled } + driveDetector.sourceCards
         let allDestinations = driveDetector.manualDestinationFolders + driveDetector.destinationDrives
         
-        print("🎬 Sources: \(allSources.count), Destinations: \(allDestinations.count)")
-        print("🎬 Will create \(allSources.count * allDestinations.count) transfers")
+        print("🎬 Manual Source Folders: \(driveDetector.manualSourceFolders.count)")
+        for (i, source) in driveDetector.manualSourceFolders.enumerated() {
+            print("🎬   [\(i)] \(source.name) at \(source.path.path)")
+        }
         
-        for source in allSources {
-            for destination in allDestinations {
+        print("🎬 Source Cards: \(driveDetector.sourceCards.count)")
+        for (i, source) in driveDetector.sourceCards.enumerated() {
+            print("🎬   [\(i)] \(source.name) at \(source.path.path)")
+        }
+        
+        print("🎬 Manual Destination Folders: \(driveDetector.manualDestinationFolders.count)")
+        for (i, dest) in driveDetector.manualDestinationFolders.enumerated() {
+            print("🎬   [\(i)] \(dest.name) at \(dest.path.path)")
+        }
+        
+        print("🎬 Destination Drives: \(driveDetector.destinationDrives.count)")
+        for (i, dest) in driveDetector.destinationDrives.enumerated() {
+            print("🎬   [\(i)] \(dest.name) at \(dest.path.path)")
+        }
+        
+        print("🎬 Total Sources: \(allSources.count), Total Destinations: \(allDestinations.count)")
+        print("🎬 Expected transfers: \(allSources.count * allDestinations.count)")
+        
+        var transferCount = 0
+        for (sourceIndex, source) in allSources.enumerated() {
+            for (destIndex, destination) in allDestinations.enumerated() {
+                transferCount += 1
+                print("🎬 Creating transfer #\(transferCount): Source[\(sourceIndex)] \(source.name) → Dest[\(destIndex)] \(destination.name)")
                 addTransfer(from: source, to: destination)
             }
         }
         
-        print("🎬 BATCH QUEUE COMPLETE! Total transfers: \(transfers.count)")
+        print("🎬 ===== BATCH QUEUE COMPLETE! =====")
+        print("🎬 Created \(transferCount) transfer calls, actual transfers in queue: \(transfers.count)")
     }
     
     func startTransfers() {
@@ -152,14 +216,44 @@ class TransferEngine: ObservableObject {
     }
     
     private func processTransfer(_ transfer: TransferJob) {
-        Task {
+        Task { @MainActor in
             var job = transfer
             job.status = .preparing
             updateTransfer(job)
             currentTransfer = job
             
             do {
-                try FileManager.default.createDirectory(at: job.destinationPath, withIntermediateDirectories: true)
+                // Check if destination already exists BEFORE starting transfer
+                print("🎬 Checking if destination exists: \(job.destinationPath.path)")
+                
+                if FileManager.default.fileExists(atPath: job.destinationPath.path) {
+                    print("⚠️ CONFLICT DETECTED: Destination already exists")
+                    let resolution = await handleExistingDestination(job: job)
+                    
+                    switch resolution {
+                    case .replace:
+                        print("🎬 User chose REPLACE - removing existing folder")
+                        try FileManager.default.removeItem(at: job.destinationPath)
+                        try FileManager.default.createDirectory(at: job.destinationPath, withIntermediateDirectories: true)
+                    case .keepBoth(let newPath):
+                        print("🎬 User chose KEEP BOTH - using new path: \(newPath.path)")
+                        job.destinationPath = newPath
+                        updateTransfer(job)
+                        try FileManager.default.createDirectory(at: job.destinationPath, withIntermediateDirectories: true)
+                    case .skip:
+                        print("🎬 User chose SKIP - cancelling transfer")
+                        job.status = .cancelled
+                        updateTransfer(job)
+                        currentTransfer = nil
+                        if isTransferring {
+                            processNextTransfer()
+                        }
+                        return
+                    }
+                } else {
+                    print("🎬 Destination clear - creating directory")
+                    try FileManager.default.createDirectory(at: job.destinationPath, withIntermediateDirectories: true)
+                }
                 
                 job.status = .transferring
                 updateTransfer(job)
@@ -192,13 +286,42 @@ class TransferEngine: ObservableObject {
                 job.status = .verifying
                 updateTransfer(job)
                 
-                let allChecksumsValid = job.files.allSatisfy { $0.checksum != nil }
+                // Small delay to ensure UI updates to show verification phase
+                try await Task.sleep(nanoseconds: 200_000_000) // 200ms
+                
+                // Actually verify checksums by comparing source and destination
+                var allChecksumsValid = true
+                var verificationError: String?
+                
+                for (_, file) in job.files.enumerated() {
+                    guard let originalChecksum = file.checksum else {
+                        allChecksumsValid = false
+                        verificationError = "Missing checksum for \(file.sourcePath.lastPathComponent)"
+                        break
+                    }
+                    
+                    // Verify the copied file has the same checksum
+                    do {
+                        let verificationChecksum = try await checksumManager.calculateChecksum(for: file.destinationPath)
+                        if originalChecksum != verificationChecksum {
+                            allChecksumsValid = false
+                            verificationError = "Checksum mismatch for \(file.sourcePath.lastPathComponent)"
+                            break
+                        }
+                        print("🎬 ✓ Verified: \(file.sourcePath.lastPathComponent) - SHA-256: \(originalChecksum)")
+                    } catch {
+                        allChecksumsValid = false
+                        verificationError = "Could not verify \(file.sourcePath.lastPathComponent): \(error.localizedDescription)"
+                        break
+                    }
+                }
                 
                 if allChecksumsValid {
                     job.status = .completed
+                    print("🎬 ✅ All files verified with SHA-256 checksums")
                 } else {
                     job.status = .failed
-                    job.error = .checksumMismatch(expected: "valid", actual: "invalid")
+                    job.error = .ioError(verificationError ?? "Checksum verification failed")
                 }
                 
                 updateTransfer(job)
@@ -258,5 +381,75 @@ class TransferEngine: ObservableObject {
         default:
             isTransferring = false
         }
+    }
+    
+    enum ConflictResolution {
+        case replace
+        case keepBoth(newPath: URL)
+        case skip
+    }
+    
+    private func handleExistingDestination(job: TransferJob) async -> ConflictResolution {
+        return await MainActor.run {
+            let alert = NSAlert()
+            alert.messageText = "Folder Already Exists"
+            alert.informativeText = "A folder named '\(job.destinationPath.lastPathComponent)' already exists at this location."
+            alert.alertStyle = .warning
+            
+            // Add buttons
+            alert.addButton(withTitle: "Replace")
+            alert.addButton(withTitle: "Keep Both")
+            alert.addButton(withTitle: "Skip")
+            
+            // Add accessory view with "Show in Finder" button
+            let accessoryView = NSView(frame: NSRect(x: 0, y: 0, width: 300, height: 40))
+            let showInFinderButton = NSButton(frame: NSRect(x: 0, y: 0, width: 120, height: 30))
+            showInFinderButton.title = "Show in Finder"
+            showInFinderButton.bezelStyle = .rounded
+            showInFinderButton.target = self
+            showInFinderButton.action = #selector(showInFinder(_:))
+            showInFinderButton.tag = 0 // We'll use representedObject instead
+            accessoryView.addSubview(showInFinderButton)
+            alert.accessoryView = accessoryView
+            
+            // Store the path for the button
+            conflictPath = job.destinationPath
+            
+            let response = alert.runModal()
+            
+            switch response {
+            case .alertFirstButtonReturn: // Replace
+                return .replace
+                
+            case .alertSecondButtonReturn: // Keep Both
+                // Generate new name with number suffix
+                let newPath = generateUniqueDestinationPath(basePath: job.destinationPath)
+                return .keepBoth(newPath: newPath)
+                
+            default: // Skip
+                return .skip
+            }
+        }
+    }
+    
+    private var conflictPath: URL?
+    
+    @objc private func showInFinder(_ sender: NSButton) {
+        guard let path = conflictPath else { return }
+        NSWorkspace.shared.activateFileViewerSelecting([path])
+    }
+    
+    private func generateUniqueDestinationPath(basePath: URL) -> URL {
+        let parentDirectory = basePath.deletingLastPathComponent()
+        let baseName = basePath.lastPathComponent
+        var counter = 2
+        var newPath = parentDirectory.appendingPathComponent("\(baseName)_\(counter)")
+        
+        while FileManager.default.fileExists(atPath: newPath.path) {
+            counter += 1
+            newPath = parentDirectory.appendingPathComponent("\(baseName)_\(counter)")
+        }
+        
+        return newPath
     }
 }

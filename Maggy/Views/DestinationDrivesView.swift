@@ -76,7 +76,7 @@ struct DestinationDrivesView: View {
         
         if panel.runModal() == .OK {
             if let url = panel.url {
-                driveDetector.addDestinationFolder(url)
+                _ = driveDetector.addDestinationFolder(url)
             }
         }
     }

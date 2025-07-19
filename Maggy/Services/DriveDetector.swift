@@ -77,10 +77,21 @@ class DriveDetector: ObservableObject {
                     mountPoint: volume.path
                 )
                 
+                // Filter out system drives from destinations
+                let isSystemDrive = volume.path == "/" || 
+                                  volume.path.hasPrefix("/System") ||
+                                  volume.path.hasPrefix("/private") ||
+                                  name.contains("Macintosh HD") ||
+                                  name.contains("macOS")
+                
                 if isRemovable && totalSpace < 500_000_000_000 {
                     sources.append(drive)
-                } else if !isRemovable || totalSpace > 500_000_000_000 {
+                } else if !isRemovable && !isSystemDrive && totalSpace > 500_000_000_000 {
+                    // Only add external drives, not system drives
                     destinations.append(drive)
+                    print("🎬 Added destination drive: \(name) at \(volume.path)")
+                } else if isSystemDrive {
+                    print("⚠️ Filtered out system drive: \(name) at \(volume.path)")
                 }
                 
             } catch {
@@ -93,8 +104,12 @@ class DriveDetector: ObservableObject {
         autoDetectedDrives = sources + destinations
     }
     
-    func addSourceFolder(_ url: URL) {
-        let folderInfo = DriveInfo(
+    func addSourceFolder(_ url: URL) -> Bool {
+        // Check if this source is already selected
+        let isDuplicate = manualSourceFolders.contains { $0.path == url }
+        
+        // Always create the folder info
+        var folderInfo = DriveInfo(
             name: url.lastPathComponent,
             path: url,
             totalSpace: getFolderSize(url),
@@ -103,10 +118,28 @@ class DriveDetector: ObservableObject {
             cameraType: nil,
             mountPoint: url.path
         )
-        manualSourceFolders.append(folderInfo)
+        
+        if isDuplicate {
+            // Mark as disabled duplicate and add to end of list
+            folderInfo.isDisabled = true
+            folderInfo.disabledReason = "Excluded - duplicate source"
+            manualSourceFolders.append(folderInfo)
+            return false // Return false to indicate duplicate (for UI feedback)
+        } else {
+            // Normal addition
+            manualSourceFolders.append(folderInfo)
+            return true // Return true to indicate success
+        }
     }
     
-    func addDestinationFolder(_ url: URL) {
+    func addDestinationFolder(_ url: URL) -> Bool {
+        // Check if this destination is already selected
+        let isDuplicate = manualDestinationFolders.contains { $0.path == url }
+        
+        if isDuplicate {
+            return false // Return false to indicate duplicate
+        }
+        
         let folderInfo = DriveInfo(
             name: url.lastPathComponent,
             path: url,
@@ -117,6 +150,7 @@ class DriveDetector: ObservableObject {
             mountPoint: url.path
         )
         manualDestinationFolders.append(folderInfo)
+        return true // Return true to indicate success
     }
     
     func removeSourceFolder(at index: Int) {

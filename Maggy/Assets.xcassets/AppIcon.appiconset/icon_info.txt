@@ -1,0 +1,10 @@
+# Maggy App Icon Created
+# 
+# A simple film magazine-inspired icon with:
+# - Dark background (#2d2d30)
+# - Rounded rectangle body (#46464b) 
+# - White MAG text
+# - Small sprocket holes for cinema feel
+#
+# This gets the app out of default icon immediately
+# and sets the visual tone for a professional film tool.

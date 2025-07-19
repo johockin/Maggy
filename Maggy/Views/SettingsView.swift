@@ -1,15 +1,15 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Binding var isTestMode: Bool
-    @AppStorage("checksumAlgorithm") private var checksumAlgorithm = "SHA-256"
+    @AppStorage("isRushModeEnabled") private var isRushModeEnabled = false
+    @State private var showRushModeWarning = false
     @AppStorage("showDetailedLogs") private var showDetailedLogs = false
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 20) {
             HStack {
-                Text("Settings")
+                Text("Maggy Preferences")
                     .font(.title2)
                     .fontWeight(.semibold)
                 
@@ -18,58 +18,120 @@ struct SettingsView: View {
                 Button("Done") {
                     dismiss()
                 }
+                .keyboardShortcut(.return)
             }
-            .padding()
             
             Divider()
             
-            Form {
-                Section("General") {
-                    Toggle("Test Mode", isOn: $isTestMode)
-                        .help("Use simulated drives and test data instead of real hardware")
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Verification Mode")
+                    .font(.headline)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Default Mode")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Text("Cryptographic verification with SHA-256 (~200 MB/s)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text("Bit-perfect accuracy guaranteed")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        if !isRushModeEnabled {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                        }
+                    }
+                    .padding()
+                    .background(isRushModeEnabled ? Color.clear : Color(NSColor.controlBackgroundColor))
+                    .cornerRadius(8)
                     
-                    if !isTestMode {
-                        Text("⚠️ Test Mode is OFF - Real drives and folders will be used")
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text("Rush Mode")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                Image(systemName: "bolt.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
+                            }
+                            Text("High-speed integrity checking with xxHash (~1 GB/s)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text("Still excellent error detection")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        
+                        Spacer()
+                        
+                        Toggle("", isOn: Binding(
+                            get: { isRushModeEnabled },
+                            set: { newValue in 
+                                if newValue && !isRushModeEnabled {
+                                    showRushModeWarning = true
+                                    // Auto-dismiss warning after 3 seconds
+                                    Task {
+                                        try await Task.sleep(nanoseconds: 3_000_000_000)
+                                        await MainActor.run {
+                                            showRushModeWarning = false
+                                        }
+                                    }
+                                }
+                                isRushModeEnabled = newValue
+                            }
+                        ))
+                        .toggleStyle(.switch)
+                    }
+                    .padding()
+                    .background(isRushModeEnabled ? Color(NSColor.controlBackgroundColor) : Color.clear)
+                    .cornerRadius(8)
+                }
+                
+                if isRushModeEnabled {
+                    HStack {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(.orange)
+                        Text("Use only in trusted environments. Not cryptographically secure.")
                             .font(.caption)
                             .foregroundColor(.orange)
-                            .padding(.top, 4)
                     }
+                    .padding(.horizontal)
+                }
+                
+                if showRushModeWarning {
+                    HStack {
+                        Image(systemName: "bolt.fill")
+                            .foregroundColor(.orange)
+                        Text("Rush Mode enabled - faster transfers with lightweight verification")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
+                    .padding(.horizontal)
+                    .transition(.opacity)
+                }
+                
+                Divider()
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Advanced")
+                        .font(.headline)
                     
                     Toggle("Show Detailed Logs", isOn: $showDetailedLogs)
                         .help("Display verbose logging information during transfers")
                 }
-                
-                Section("Checksum") {
-                    Picker("Algorithm", selection: $checksumAlgorithm) {
-                        Text("SHA-256 (Maximum Security)").tag("SHA-256")
-                        Text("xxHash (Fast Verification)").tag("xxHash")
-                            .disabled(true)
-                    }
-                    .pickerStyle(.radioGroup)
-                    
-                    Text("SHA-256 is the industry standard for secure file verification. xxHash support coming soon.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                
-                Section("About") {
-                    HStack {
-                        Text("Version")
-                        Spacer()
-                        Text("1.0.0 (MVP)")
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    HStack {
-                        Text("Purpose")
-                        Spacer()
-                        Text("Hedge Replacement")
-                            .foregroundColor(.secondary)
-                    }
-                }
             }
-            .formStyle(.grouped)
+            
+            Spacer()
         }
-        .frame(width: 450, height: 400)
+        .padding()
+        .frame(width: 500, height: 450)
     }
 }

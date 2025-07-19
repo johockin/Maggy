@@ -91,6 +91,8 @@ On transfer failure:
 
 *[Date] - [Author] - [Change]*
 
+- 2025-01-19 - Claude - **SPRINT 0.16 COMPLETE - SETTINGS & RUSH MODE UI**: Added complete Settings access (bottom-right gear button + Cmd+, menu), implemented Rush Mode toggle in bottom status bar, created Rush Mode warning popup system, updated verification messages based on mode. Fixed SettingsManager scope issues by switching to @AppStorage directly. **CRITICAL NOTE**: Rush Mode currently UI-only - changes text but still uses SHA-256. Sprint 0.17 will implement real xxHash for actual speed improvement.
+- 2025-01-19 - Claude - **SPRINT 0.15 SERIES COMPLETE**: Completed comprehensive UX polish across 4 sub-sprints: (0.15.1) Fixed 8 critical transfer queue UX issues including sequential visibility and checksum confirmation, (0.15.2) Implemented sophisticated button polish with muted professional colors and staggered timing, (0.15.3) Created "one big button" philosophy with Queue All as commanding 480×80px star button, (0.15.4) Generated proper film magazine app icons and fixed duplicate source behavior to show disabled folders with inline explanations. App now has professional visual hierarchy and proper macOS integration.
 - 2025-01-18 - Claude - **VERSION 0.1 FOUNDATION COMPLETE**: Implemented revolutionary batch queuing system, fixed critical transfer hanging bug, simplified UX to single-button workflow, added real folder selection with "New Folder" capability, and redesigned adaptive layout. App now ready for production testing with professional filmmaker workflow: browse sources/destinations → queue all → start transfers → walk away. QA scheduled for morning.
 - 2025-01-18 - Claude - **XCODE PROJECT CONVERSION COMPLETE**: Successfully converted Swift Package to proper macOS Xcode project. Added proper window management, dock icon, app menu bar, Info.plist, entitlements for file access, and asset catalogs. App now launches as professional macOS application while preserving all transfer functionality.
 - 2025-01-18 - Claude - **CRITICAL ERROR & RECOVERY**: Accidentally deleted PROJECT_SPEC.md while fixing Xcode project. Recreated from user's original. Built complete MVP: SwiftUI app with drag/drop, sequential transfers, SHA-256 checksums, test mode, error dialogs. Set up git repo. LESSON LEARNED: Never delete the spec file - it's the sacred foundation.
@@ -150,19 +152,217 @@ On transfer failure:
 - **Flexible workflow**: Mix manual folders + auto-detected drives
 - **Visual hierarchy**: Clear separation between manual vs auto-detected
 
-## 🎯 VERSION 0.2 - VISUAL IDENTITY (Weeks 3-4)
-**"Make filmmakers want to use it"**
+## 🎯 SPRINT 0.17 - xxHash IMPLEMENTATION (CRITICAL)
+**1-hour sprint: "Stop the phoney verification"**
 
-- [ ] 🎨 Cinema-grade dark theme (THX/Dolby inspired)
-- [ ] 🎨 Professional logo and branding
-- [ ] 🎨 CleanMyMac-style interface simplification
-- [ ] 🎨 Smooth animations and transitions
-- [ ] 🎨 Sound design (subtle audio feedback)
+**CRITICAL ISSUE**: Rush Mode currently just changes UI text but still uses SHA-256. This is misleading and unprofessional.
+
+**Implementation Requirements:**
+- [ ] ⚡ Add xxHash Swift package dependency
+- [ ] ⚡ Implement REAL xxHash calculation in ChecksumManager
+- [ ] ⚡ Actually switch between SHA-256 and xxHash based on mode
+- [ ] ⚡ Make Rush Mode genuinely faster (~5x speed improvement)
+- [ ] ⚡ Remove fake behavior where text changes live during verification
+- [ ] ⚡ Fix Rush Mode warning popup not appearing
+
+**Quality Standards:**
+- Rush Mode must use actual xxHash algorithm
+- Speed difference must be measurable (SHA-256: ~200MB/s vs xxHash: ~1GB/s)
+- UI text should only change when verification method actually changes
+- Warning popup must appear when enabling Rush Mode
+
+---
+
+## 🎯 SPRINT 0.18 - SMART DUPLICATE DETECTION
+**2-hour sprint: "Never transfer the same footage twice"**
+
+**Context**: Users often dump the same card multiple times by accident, wasting time and disk space. Since Maggy adds timestamps to folder names, simple name matching won't work.
+
+**Implementation Details:**
+
+**Detection Method:**
+- [ ] Compare folder contents (file count, total size, file names)
+- [ ] Create a "fingerprint" of each transferred folder  
+- [ ] Store fingerprints in lightweight local database or JSON file
+- [ ] Check new transfers against fingerprint database
+
+**User Experience:**
+- [ ] When queuing potentially duplicate source show warning: "This appears to match a previous transfer:"
+- [ ] Display: "Transferred as 'FolderName_MAG_2025-07-19_081542' on July 19 at 8:15 AM"
+- [ ] Options: "Transfer Anyway" / "Skip This Source" / "View Previous Transfer"
+
+**Technical Considerations:**
+- [ ] Don't block if unsure - err on side of allowing transfer
+- [ ] Quick detection - shouldn't slow down queue process  
+- [ ] Handle partial matches (90% similar = likely duplicate)
+
+---
+
+## 🎯 SPRINT 0.19 - PROFESSIONAL ERROR DIALOGS  
+**2-hour sprint: "Errors that inspire confidence"**
+
+**Context**: Current error dialogs use system alerts that feel alarming. Professional filmmakers need errors that feel like "mission control updates" not failures.
+
+**Visual Design Requirements:**
+- [ ] Color Palette: Dark background (#1a1a1a) with subtle blue-gray gradient
+- [ ] Typography: SF Pro Display for headers, SF Pro Text for body
+- [ ] Layout: Centered modal with generous padding, subtle shadow/glow
+- [ ] Icons: Custom icons that suggest "decision needed" not "error"
+  - [ ] Use symbols like: ⚡ (decision), 🎯 (target), 📡 (signal)
+  - [ ] Avoid: ❌ ⚠️ ❗ (too alarming)
+
+**Dialog Structure:**
+```
+┌─────────────────────────────────────────┐
+│          Decision Required              │
+│   ─────────────────────────────        │
+│                                         │
+│   Transfer Control requires your        │
+│   input on the following:              │
+│                                         │
+│   [Technical description of situation]  │
+│                                         │
+│   [Primary Action]  [Secondary Action]  │
+└─────────────────────────────────────────┘
+```
+
+**Specific Dialogs to Replace:**
+- [ ] Folder Exists Dialog: Already implemented but needs visual upgrade
+- [ ] Disk Full: "Destination capacity reached. Select alternate destination or free space."
+- [ ] Permission Denied: "Access credentials required for [destination]"  
+- [ ] File Corruption: "Source integrity check failed. Recommend source verification."
+- [ ] Network Timeout: "Connection to [destination] interrupted. Awaiting reconnection..."
+
+---
+
+## 🎯 SPRINT 0.20 - DARK THEME FOUNDATION
+**2-hour sprint: "Cinema-grade darkness"**
+
+**Context**: Maggy should feel at home in a color grading suite or DIT station where ambient light is controlled and screens are calibrated.
+
+**Design Specifications:**
+
+**Background Colors:**
+- [ ] Primary: #0a0a0a (near black)
+- [ ] Secondary: #1a1a1a (raised surfaces)  
+- [ ] Tertiary: #2a2a2a (active elements)
+
+**Accent Colors:**
+- [ ] Primary Action: Subtle blue gradient (#1e3a5f to #2d4a7c)
+- [ ] Success: Muted green (#2d5016)
+- [ ] Warning: Amber (#5c4416)
+- [ ] Transfers: Cool gray-blue (#364156)
+
+**Text Colors:**
+- [ ] Primary: #ffffff at 90% opacity
+- [ ] Secondary: #ffffff at 60% opacity
+- [ ] Disabled: #ffffff at 30% opacity
+
+**Visual Effects:**
+- [ ] Subtle gradients on interactive elements
+- [ ] Minimal shadows (0-2px, low opacity)
+- [ ] No pure black or white (except text)
+- [ ] Smooth rounded corners (8-12px radius)
+
+---
+
+## 🎯 SPRINT 0.21 - TYPOGRAPHY & SPACING
+**2-hour sprint: "Premium feel through details"**
+
+**Typography Hierarchy:**
+- [ ] App Title: SF Pro Display, 18pt, Medium
+- [ ] Section Headers: SF Pro Display, 16pt, Regular  
+- [ ] Button Text: SF Pro Text, 15pt, Semibold
+- [ ] Body Text: SF Pro Text, 13pt, Regular
+- [ ] Metadata: SF Mono, 11pt, Regular (for checksums, file sizes)
+
+**Spacing System (8pt grid):**
+- [ ] Micro: 4pt (tight groups)
+- [ ] Small: 8pt (related elements)
+- [ ] Medium: 16pt (sections)
+- [ ] Large: 24pt (major sections)  
+- [ ] XLarge: 32pt (view separation)
+
+**Number Formatting:**
+- [ ] File sizes: "1.24 GB" not "1,240 MB"
+- [ ] Progress: "68%" with no decimals during transfer
+- [ ] Time remaining: "About 5 minutes" not "5:23 remaining"
+- [ ] Transfer rate: "124 MB/s" with consistent precision
+
+---
+
+## 🎯 SPRINT 0.22 - ANIMATIONS & TRANSITIONS
+**2-hour sprint: "Smooth as butter"**
+
+**Animation Principles:**
+- [ ] Duration: 200-300ms for most transitions
+- [ ] Easing: EaseInOut for movements, EaseOut for appearances
+- [ ] Stagger: 50ms between list items
+
+**Specific Animations:**
+- [ ] Queue Item Addition: Slide in from right with fade (200ms)
+- [ ] Transfer Start: Progress bar expands from 0 with subtle bounce
+- [ ] Transfer Complete: Checkmark scales in (150ms) + color transition
+- [ ] View Transitions: Cross-fade with slight scale (250ms)  
+- [ ] Button Hovers: Subtle brightness increase (100ms)
+- [ ] Error Dialogs: Fade in with slight scale up (200ms)
+
+**Performance Considerations:**
+- [ ] Disable animations if "Reduce Motion" is enabled
+- [ ] Keep animations GPU-accelerated
+- [ ] No animation should block user interaction
+
+---
+
+## 🎯 SPRINT 0.23 - ICON & BRANDING (FINAL)
+**2-hour sprint: "Professional identity"**
+
+**App Icon Requirements:**
+- [ ] Film magazine inspired but abstract
+- [ ] Works at all sizes (16x16 to 1024x1024)
+- [ ] Recognizable in dock at small sizes
+- [ ] Professional without being generic
+
+**In-App Icons:**
+- [ ] Source types: Camera cards, folders, drives
+- [ ] Destination types: Local, network, archive  
+- [ ] Status indicators: Queued, active, complete, error
+- [ ] Actions: Add, remove, start, pause
+
+**Brand Elements:**
+- [ ] Consistent corner radius (match macOS Big Sur style)
+- [ ] Subtle gradient direction (top-left light source)
+- [ ] Professional without being cold
+- [ ] Technical without being intimidating
+
+---
+
+## 🎯 SPRINT 0.24 - SOUND DESIGN  
+**2-hour sprint: "Subtle audio feedback"**
+
+**Sound Principles:**
+- [ ] Minimal and professional
+- [ ] Never jarring or attention-seeking
+- [ ] Optional with granular controls
+
+**Specific Sounds:**
+- [ ] Transfer Complete: Subtle chime (like macOS "Glass")
+- [ ] All Transfers Complete: Slightly longer success sound
+- [ ] Error Occurred: Soft alert (not alarming)
+- [ ] Item Added to Queue: Minimal click
+- [ ] Transfer Started: Soft whoosh
+
+**Implementation:**
+- [ ] Use NSSound for system-like sounds
+- [ ] Respect system volume settings
+- [ ] Provide master on/off toggle
+- [ ] Individual sound type toggles
+
+---
 
 ## 🎯 VERSION 0.3 - PRO FEATURES (Month 2)
 **"Better than Hedge workflows"**
 
-- [ ] 📁 Real drive detection (not just test mode)
 - [ ] 📁 Network drive support (SMB, NAS)
 - [ ] 📁 Custom naming patterns (date stamps, camera IDs)
 - [ ] 📁 Transfer templates (save common workflows)

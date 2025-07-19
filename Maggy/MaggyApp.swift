@@ -8,5 +8,17 @@ struct MaggyApp: App {
         }
         .windowResizability(.contentMinSize)
         .windowStyle(.titleBar)
+        .commands {
+            CommandGroup(replacing: .appSettings) {
+                Button("Preferences...") {
+                    NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
+        }
+        
+        Settings {
+            SettingsView()
+        }
     }
 }

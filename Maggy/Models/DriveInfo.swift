@@ -10,6 +10,8 @@ struct DriveInfo: Identifiable, Transferable {
     let isRemovable: Bool
     let cameraType: CameraType?
     let mountPoint: String
+    var isDisabled: Bool = false
+    var disabledReason: String?
     
     var formattedFreeSpace: String {
         ByteCountFormatter.string(fromByteCount: freeSpace, countStyle: .file)

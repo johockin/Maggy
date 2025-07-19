@@ -3,7 +3,7 @@ import Foundation
 struct TransferJob: Identifiable {
     let id = UUID()
     let sourcePath: URL
-    let destinationPath: URL
+    var destinationPath: URL
     var totalSize: Int64
     var copiedSize: Int64 = 0
     var status: TransferStatus = .queued

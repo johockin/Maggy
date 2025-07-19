@@ -4,6 +4,7 @@ import AppKit
 struct SourceDrivesView: View {
     @EnvironmentObject var driveDetector: DriveDetector
     @State private var showDetectedCards = true
+    @State private var duplicateMessage: String?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -23,21 +24,27 @@ struct SourceDrivesView: View {
                             subtitle: "(click to browse)",
                             action: browseForSourceFolder
                         )
-                    } else {
-                        ForEach(Array(driveDetector.manualSourceFolders.enumerated()), id: \.element.id) { index, folder in
+                    }
+                    
+                    // Always show the folders in the list
+                    ForEach(Array(driveDetector.manualSourceFolders.enumerated()), id: \.element.id) { index, folder in
+                        VStack(alignment: .leading, spacing: 4) {
                             ManualFolderView(
                                 drive: folder,
                                 onRemove: { driveDetector.removeSourceFolder(at: index) }
                             )
-                            .draggable(folder)
+                            .if(!folder.isDisabled) { view in
+                                view.draggable(folder)
+                            }
+                            
                         }
-                        
-                        Button("+ Add Another Folder") {
-                            browseForSourceFolder()
-                        }
-                        .font(.caption)
-                        .padding(.top, 8)
                     }
+                    
+                    Button("+ Add Another Folder") {
+                        browseForSourceFolder()
+                    }
+                    .font(.caption)
+                    .padding(.top, 8)
                     
                     // Auto-detected cards section
                     if !driveDetector.sourceCards.isEmpty {
@@ -81,7 +88,18 @@ struct SourceDrivesView: View {
         
         if panel.runModal() == .OK {
             if let url = panel.url {
-                driveDetector.addSourceFolder(url)
+                let success = driveDetector.addSourceFolder(url)
+                if !success {
+                    duplicateMessage = "This source is already selected"
+                    
+                    // Clear message after delay
+                    Task {
+                        try await Task.sleep(nanoseconds: 3_000_000_000) // 3 seconds
+                        await MainActor.run {
+                            duplicateMessage = nil
+                        }
+                    }
+                }
             }
         }
     }
@@ -197,17 +215,26 @@ struct ManualFolderView: View {
             HStack {
                 Image(systemName: "folder.fill")
                     .font(.title2)
-                    .foregroundColor(.blue)
+                    .foregroundColor(drive.isDisabled ? .secondary : .blue)
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(drive.name)
                         .font(.headline)
+                        .foregroundColor(drive.isDisabled ? .secondary : .primary)
                     
                     Text(drive.path.path)
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                         .truncationMode(.middle)
+                    
+                    // Show disabled reason if present
+                    if let reason = drive.disabledReason {
+                        Text(reason)
+                            .font(.caption2)
+                            .foregroundColor(.orange)
+                            .italic()
+                    }
                 }
                 
                 Spacer()
@@ -220,22 +247,25 @@ struct ManualFolderView: View {
                 .buttonStyle(.plain)
             }
             
-            HStack {
-                Image(systemName: "hand.draw")
-                    .font(.caption2)
-                Text("drag to destination")
-                    .font(.caption2)
+            if !drive.isDisabled {
+                HStack {
+                    Image(systemName: "hand.draw")
+                        .font(.caption2)
+                    Text("drag to destination")
+                        .font(.caption2)
+                }
+                .foregroundColor(.secondary.opacity(0.6))
             }
-            .foregroundColor(.secondary.opacity(0.6))
         }
         .padding()
-        .background(Color(NSColor.controlColor))
+        .background(drive.isDisabled ? Color(NSColor.controlColor).opacity(0.5) : Color(NSColor.controlColor))
         .cornerRadius(8)
         .overlay(
             RoundedRectangle(cornerRadius: 8)
                 .stroke(isDragging ? Color.accentColor : Color.clear, lineWidth: 2)
         )
         .scaleEffect(isDragging ? 0.95 : 1.0)
+        .opacity(drive.isDisabled ? 0.6 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: isDragging)
         .onDrag {
             isDragging = true
@@ -250,6 +280,17 @@ struct ManualFolderView: View {
             .padding()
             .background(Color(NSColor.controlBackgroundColor))
             .cornerRadius(8)
+        }
+    }
+}
+
+// Helper extension for conditional view modifiers
+extension View {
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
         }
     }
 }

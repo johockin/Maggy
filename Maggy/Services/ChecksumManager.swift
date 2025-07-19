@@ -1,5 +1,6 @@
 import Foundation
 import CryptoKit
+// import xxHash_Swift  // Will be available after adding SPM dependency
 
 class ChecksumManager {
     enum Algorithm {
@@ -40,7 +41,27 @@ class ChecksumManager {
                 return digest.map { String(format: "%02x", $0) }.joined()
                 
             case .xxHash:
-                return "xxHash-not-implemented"
+                // For now, use a fast native implementation as placeholder
+                // This will be replaced with real xxHash once SPM dependency is added
+                var hasher = Hasher()
+                
+                while inputStream.hasBytesAvailable {
+                    let bytesRead = inputStream.read(&buffer, maxLength: bufferSize)
+                    
+                    if bytesRead < 0 {
+                        throw inputStream.streamError ?? CocoaError(.fileReadUnknown)
+                    } else if bytesRead == 0 {
+                        break
+                    }
+                    
+                    let dataChunk = Data(bytes: buffer, count: bytesRead)
+                    dataChunk.withUnsafeBytes { buffer in
+                        hasher.combine(bytes: buffer)
+                    }
+                }
+                
+                let hashValue = hasher.finalize()
+                return String(format: "%016x", UInt64(bitPattern: Int64(hashValue)))
             }
         }.value
     }

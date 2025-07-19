@@ -41,7 +41,7 @@ class FileOperations {
         }.value
     }
     
-    func copyFile(from source: URL, to destination: URL, progress: @escaping (Int) -> Void) async throws -> String {
+    func copyFile(from source: URL, to destination: URL, algorithm: ChecksumManager.Algorithm = .sha256, progress: @escaping (Int) -> Void) async throws -> String {
         return try await Task.detached {
             let bufferSize = 1024 * 1024
             var buffer = [UInt8](repeating: 0, count: bufferSize)
@@ -59,7 +59,17 @@ class FileOperations {
                 outputStream.close()
             }
             
-            var hasher = SHA256()
+            // Initialize appropriate hasher based on algorithm
+            var sha256Hasher: SHA256?
+            var swiftHasher: Hasher?
+            
+            switch algorithm {
+            case .sha256:
+                sha256Hasher = SHA256()
+            case .xxHash:
+                swiftHasher = Hasher()
+            }
+            
             var totalBytesWritten = 0
             
             while inputStream.hasBytesAvailable {
@@ -72,7 +82,16 @@ class FileOperations {
                 }
                 
                 let dataChunk = Data(bytes: buffer, count: bytesRead)
-                hasher.update(data: dataChunk)
+                
+                // Update appropriate hasher
+                switch algorithm {
+                case .sha256:
+                    sha256Hasher?.update(data: dataChunk)
+                case .xxHash:
+                    dataChunk.withUnsafeBytes { buffer in
+                        swiftHasher?.combine(bytes: buffer)
+                    }
+                }
                 
                 let bytesWritten = outputStream.write(buffer, maxLength: bytesRead)
                 
@@ -87,8 +106,15 @@ class FileOperations {
                 }
             }
             
-            let digest = hasher.finalize()
-            return digest.map { String(format: "%02x", $0) }.joined()
+            // Generate final hash based on algorithm
+            switch algorithm {
+            case .sha256:
+                let digest = sha256Hasher!.finalize()
+                return digest.map { String(format: "%02x", $0) }.joined()
+            case .xxHash:
+                let hashValue = swiftHasher!.finalize()
+                return String(format: "%016x", UInt64(bitPattern: Int64(hashValue)))
+            }
             
         }.value
     }

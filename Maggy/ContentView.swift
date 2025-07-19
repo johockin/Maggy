@@ -83,7 +83,7 @@ struct ContentView: View {
             
             Divider()
             
-            ControlsView(showSourceDestination: $showSourceDestination)
+            ControlsView(showSourceDestination: $showSourceDestination, showRushModeWarning: $showRushModeWarning)
                 .padding()
         }
         .environmentObject(driveDetector)
@@ -95,37 +95,43 @@ struct ContentView: View {
             // Rush Mode Warning Popup
             Group {
                 if showRushModeWarning {
-                    VStack {
-                        Spacer()
+                    ZStack {
+                        // Semi-transparent background
+                        Color.black.opacity(0.3)
+                            .ignoresSafeArea()
                         
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                Image(systemName: "bolt.fill")
-                                    .foregroundColor(.orange)
-                                Text("Rush Mode Enabled")
-                                    .font(.headline)
-                                    .fontWeight(.semibold)
-                            }
+                        VStack {
+                            Spacer()
                             
-                            Divider()
-                            
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Faster transfers with lightweight verification. Still detects corruption but not cryptographically secure.")
-                                    .font(.caption)
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack {
+                                    Image(systemName: "bolt.fill")
+                                        .foregroundColor(.orange)
+                                    Text("Rush Mode Enabled")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                }
                                 
-                                Text("Use only for trusted environments.")
-                                    .font(.caption)
-                                    .fontWeight(.medium)
+                                Divider()
+                                
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Faster transfers with lightweight verification. Still detects corruption but not cryptographically secure.")
+                                        .font(.caption)
+                                    
+                                    Text("Use only for trusted environments.")
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                }
                             }
+                            .padding()
+                            .background(Color(NSColor.controlBackgroundColor))
+                            .cornerRadius(12)
+                            .shadow(radius: 8)
+                            .frame(maxWidth: 300)
+                            .padding()
+                            
+                            Spacer()
                         }
-                        .padding()
-                        .background(Color(NSColor.controlBackgroundColor))
-                        .cornerRadius(12)
-                        .shadow(radius: 8)
-                        .frame(maxWidth: 300)
-                        .padding()
-                        
-                        Spacer()
                     }
                     .transition(.opacity.combined(with: .scale))
                 }
@@ -159,8 +165,8 @@ struct ControlsView: View {
     @EnvironmentObject var driveDetector: DriveDetector
     @AppStorage("isRushModeEnabled") private var isRushModeEnabled = false
     @Binding var showSourceDestination: Bool
+    @Binding var showRushModeWarning: Bool
     @State private var showingSettings = false
-    @State private var showRushModeWarning = false
     
     var body: some View {
         VStack(spacing: 12) {
@@ -229,12 +235,14 @@ struct ControlsView: View {
                     get: { isRushModeEnabled },
                     set: { newValue in 
                         if newValue && !isRushModeEnabled {
+                            print("DEBUG: Showing Rush Mode warning")
                             showRushModeWarning = true
                             // Auto-dismiss warning after 3 seconds
                             Task {
                                 try await Task.sleep(nanoseconds: 3_000_000_000)
                                 await MainActor.run {
                                     showRushModeWarning = false
+                                    print("DEBUG: Hiding Rush Mode warning")
                                 }
                             }
                         }

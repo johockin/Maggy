@@ -13,6 +13,15 @@ class TransferEngine: ObservableObject {
     private var checksumManager: ChecksumManager
     private var cancellables = Set<AnyCancellable>()
     
+    // Rush Mode setting - reads from UserDefaults
+    private var isRushModeEnabled: Bool {
+        UserDefaults.standard.bool(forKey: "isRushModeEnabled")
+    }
+    
+    private var currentAlgorithm: ChecksumManager.Algorithm {
+        isRushModeEnabled ? .xxHash : .sha256
+    }
+    
     init() {
         self.fileOperations = FileOperations()
         self.checksumManager = ChecksumManager()
@@ -271,6 +280,7 @@ class TransferEngine: ObservableObject {
                     let checksum = try await fileOperations.copyFile(
                         from: file.sourcePath,
                         to: fileDestination,
+                        algorithm: currentAlgorithm,
                         progress: { bytesWritten in
                             Task { @MainActor in
                                 job.copiedSize += Int64(bytesWritten)
@@ -302,13 +312,14 @@ class TransferEngine: ObservableObject {
                     
                     // Verify the copied file has the same checksum
                     do {
-                        let verificationChecksum = try await checksumManager.calculateChecksum(for: file.destinationPath)
+                        let verificationChecksum = try await checksumManager.calculateChecksum(for: file.destinationPath, algorithm: currentAlgorithm)
                         if originalChecksum != verificationChecksum {
                             allChecksumsValid = false
                             verificationError = "Checksum mismatch for \(file.sourcePath.lastPathComponent)"
                             break
                         }
-                        print("🎬 ✓ Verified: \(file.sourcePath.lastPathComponent) - SHA-256: \(originalChecksum)")
+                        let algorithmName = currentAlgorithm == .sha256 ? "SHA-256" : "xxHash"
+                        print("🎬 ✓ Verified: \(file.sourcePath.lastPathComponent) - \(algorithmName): \(originalChecksum)")
                     } catch {
                         allChecksumsValid = false
                         verificationError = "Could not verify \(file.sourcePath.lastPathComponent): \(error.localizedDescription)"

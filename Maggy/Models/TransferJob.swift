@@ -1,5 +1,10 @@
 import Foundation
 
+enum VerificationMode: String, Codable {
+    case sha256 = "SHA-256"
+    case rush = "Rush"
+}
+
 struct TransferJob: Identifiable {
     let id = UUID()
     let sourcePath: URL
@@ -10,6 +15,7 @@ struct TransferJob: Identifiable {
     var checksum: String?
     var error: TransferError?
     var files: [FileTransfer] = []
+    var verificationMode: VerificationMode = .sha256
     
     var progress: Double {
         guard totalSize > 0 else { return 0 }

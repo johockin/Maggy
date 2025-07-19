@@ -265,6 +265,7 @@ class TransferEngine: ObservableObject {
                 }
                 
                 job.status = .transferring
+                job.verificationMode = currentAlgorithm == .sha256 ? .sha256 : .rush
                 updateTransfer(job)
                 
                 for (index, file) in job.files.enumerated() {

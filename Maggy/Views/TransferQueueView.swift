@@ -190,7 +190,7 @@ struct TransferItemView: View {
                             .font(.caption)
                             .foregroundColor(.red)
                     } else if transfer.status == .verifying {
-                        Text(isRushModeEnabled ? "Quick verification in progress..." : "Verifying bit-perfect accuracy...")
+                        Text(transfer.verificationMode == .rush ? "Quick verification in progress..." : "Verifying bit-perfect accuracy...")
                             .font(.caption)
                             .foregroundColor(.blue)
                     } else if transfer.status != .completed {
@@ -229,12 +229,12 @@ struct TransferItemView: View {
                     
                     // Show verification status or confirmation
                     if transfer.status == .verifying {
-                        Text(isRushModeEnabled ? "Quick verification in progress..." : "Verifying bit-perfect accuracy...")
+                        Text(transfer.verificationMode == .rush ? "Quick verification in progress..." : "Verifying bit-perfect accuracy...")
                             .font(.caption2)
                             .foregroundColor(.blue)
                             .italic()
                     } else if transfer.status == .completed {
-                        Text(isRushModeEnabled ? 
+                        Text(transfer.verificationMode == .rush ? 
                              "✓ Transfer verified - High-speed integrity check passed" :
                              "✓ Bit-perfect copy verified - SHA-256 match")
                             .font(.caption2)

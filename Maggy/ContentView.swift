@@ -179,6 +179,8 @@ struct ControlsView: View {
                     
                     Button(action: {
                         transferEngine.queueAllSourcesAllDestinations(driveDetector: driveDetector)
+                        // Automatically switch to transfer view to show immediate feedback
+                        showSourceDestination = false
                     }) {
                         Text("Queue All")
                             .font(.title)
